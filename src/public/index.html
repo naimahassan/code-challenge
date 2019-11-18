@@ -19,8 +19,8 @@
 <body>
     <div id="main-div">
 
-        <div id="myDiv" style="height: 80%;width: 50%;"></div>
-        <div>
+        <div id="myDiv" style="margin: auto;padding: 20 px;"></div>
+        <div style="padding: 20px;">
             <h2>hello</h2>
         </div>
     </div>
@@ -43,7 +43,7 @@
             sendNotifiction()
         }
         d3.select('#svgD3').remove()
-        batteryCharge("#myDiv", "Water level", 10, waterLevel);
+        batteryCharge("#myDiv", "", 10, waterLevel);
     });
     function sendNotifiction() {
         socket.emit('news', { data: ' water level is at' + ' ' + waterLevel })
