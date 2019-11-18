@@ -5,7 +5,7 @@ const socketIO = require('socket.io')
 const readline = require('readline')
 const fs = require('fs')
 var lineReader = require('line-reader')
-
+const port=process.env.PORT|3001
 // our localhost port
 const port = 3001
 
