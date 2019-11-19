@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Tank Visual..</title>
+    <style>
+        #main-div {
+
+            display: inline-flex;
+
+
+        }
+    </style>
+</head>
+
+<body>
+    <div id="main-div">
+
+        <div id="myDiv" style="height: 80%;width: 50%;"></div>
+        <div>
+            <h2>hello</h2>
+        </div>
+    </div>
+    <!-- Add a svg area, empty -->
+
+
+</body>
+<script src="https://d3js.org/d3.v5.min.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    var waterLevel = 0;
+    var socket = io();
+    var counter = 0
+    socket.on('news', function (data) {
+        let obj = JSON.parse(data.data);
+        let hght = Number(obj.height);
+        console.table(hght)
+        waterLevel = ((hght * 10 * 10) * 100) / 30000
+        if (waterLevel <= 50) {
+            sendNotifiction()
+        }
+        d3.select('#svgD3').remove()
+        batteryCharge("#myDiv", "Water level", 10, waterLevel);
+    });
+    function sendNotifiction() {
+        socket.emit('news', { data: ' water level is at' + ' ' + waterLevel })
+    }
+</script>
+
+<script>
+    // Target Div, Title, NUmber of battery charge bars, % charged
+
+
+    function batteryCharge(target, title, chargeSegments, chargePct) {
+
+        var bodyRad = 8;
+        var bodyArc = 10;
+        var bodyH = 480;
+        var bodyW = 200;  // This is the distance from battery edge to cap edge
+        var bodyColor = "#999999";
+        var capRad = 5;
+        var capArc = 5;
+        var capH = 10;
+        var capW = 30;
+
+        var textH = 20;
+        var x = 0;
+        var y = capArc + capH + bodyArc;
+
+        //var chargeSegments = 5;
+        //var chargePct = 40;
+        var chargePadX = 8;
+        var chargePadY = 8;
+        var chargeRad = 5;
+        var chargeArc = 1;
+        var chargeColorOff = "#444444";
+        var chargeColorOn = "#00B0FF";
+        var chargeH = (bodyH + (2 * bodyArc) - ((chargeSegments + 1) * chargePadY) - (chargeSegments * 2 * chargeArc)) / chargeSegments;
+        var chargeW = (2 * bodyArc) + (2 * capArc) + (2 * bodyW) + capW - (2 * chargePadX);
+        var chargeX = x + chargePadX;
+        var chargeYStart = y + bodyH + bodyArc - chargePadY - chargeArc;
+        var svgW = (2 * bodyArc) + (2 * capArc) + (2 * bodyW) + capW;
+        var svgH = bodyH + (2 * bodyArc) + capH + capArc + textH;
+        var svg = d3.select(target).append("svg")
+            .attr('id', 'svgD3')
+            .attr("width", svgW)
+            .attr("height", svgH + 4);
+
+        var d = "M" + x + "," + y;
+        // Top section of body
+        d += " a" + bodyRad + "," + bodyRad + " 0 0,1 " + bodyArc + "," + -bodyArc;
+        d += " l" + bodyW + ",0";
+        // Draw the Cap
+        d += " l0," + -capH;
+        d += " a" + capRad + "," + capRad + " 0 0,1 " + capArc + "," + -capArc;
+        d += " l" + capW + ",0";
+        d += " a" + capRad + "," + capRad + " 0 0,1 " + capArc + "," + capArc;
+        d += " l0," + capH;
+        // Complete top section of body
+        d += " l" + bodyW + ",0";
+        d += " a" + bodyRad + "," + bodyRad + " 0 0,1 " + bodyArc + "," + bodyArc;
+        // Main body
+        d += " l0," + bodyH;
+        d += " a" + bodyRad + "," + bodyRad + " 0 0,1 " + -bodyArc + "," + bodyArc;
+        d += " l" + -((bodyW * 2) + (capArc * 2) + capW) + ",0";
+        d += " a" + bodyRad + "," + bodyRad + " 0 0,1 " + -bodyArc + "," + -bodyArc;
+
+        // Draw the battery
+        svg.append("path")          // attach a path
+            .style("stroke", bodyColor)  // colour the line
+            .style("fill", bodyColor)     // remove any fill colour
+            .attr("d", d);
+
+        // Now charge the battery
+        for (i = 1; i <= chargeSegments; i++) {
+
+            var chargeY = chargeYStart - ((i - 1) * ((chargeH + (2 * chargeArc) + chargePadY)));
+            // Start on the bottom edge of the left hand vertical
+            var d = "M" + chargeX + "," + chargeY;
+            d += " l0," + -chargeH;
+            d += " a" + chargeRad + "," + chargeRad + " 0 0,1 " + chargeArc + "," + -chargeArc;
+            d += " l" + chargeW + ",0";
+            d += " a" + chargeRad + "," + chargeRad + " 0 0,1 " + chargeArc + "," + chargeArc;
+            d += " l0," + chargeH;
+            d += " a" + chargeRad + "," + chargeRad + " 0 0,1 " + -chargeArc + "," + chargeArc;
+            d += " l" + -chargeW + ",0";
+            d += " a" + chargeRad + "," + chargeRad + " 0 0,1 " + -chargeArc + "," + -chargeArc;
+
+            var chargeColor = chargeColorOn;
+            var pct = (i / chargeSegments) * 100;
+            if (pct > chargePct) {
+                chargeColor = chargeColorOff;
+            }
+
+            svg.append("path")          // attach a path
+                .style("stroke", chargeColor)  // colour the line
+                .style("fill", chargeColor)     // remove any fill colour
+                .attr("d", d);
+
+        }
+
+        svg.append("text")
+            .text(title)
+            .style("font-size", textH)
+            .style("fill", "#222222")
+            .style("text-anchor", "top")
+            .attr("x", svgW / 2)
+            .attr("y", svgH);
+    }
+</script>
+
+</html>
