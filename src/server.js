@@ -1,11 +1,14 @@
 const express = require('express')
+var app = express();
 const path = require('path')
 const http = require('http')
 const socketIO = require('socket.io')
+var server = require('http').Server(app);
 const readline = require('readline')
 const fs = require('fs')
 var lineReader = require('line-reader')
 const port = process.env.PORT | 3001
+
 
 app.use('/', express.static(path.join(__dirname, 'public')))
 
