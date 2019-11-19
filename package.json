@@ -5,7 +5,7 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "start": "./node_modules/.bin/nodemon --exec ./node_modules/.bin/babel-node src/server.js",
+    "start": "./node_modules/.bin/nodemon --exec ./node_modules/.bin/babel-node src/server.js ",
     "post": " node --exec babel-node src/data.js",
     "lint": " ./node_modules/.bin/eslint src/*.js --fix",
     "build": "babel src --out-dir dist",

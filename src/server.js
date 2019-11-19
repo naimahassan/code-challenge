@@ -5,14 +5,7 @@ const socketIO = require('socket.io')
 const readline = require('readline')
 const fs = require('fs')
 var lineReader = require('line-reader')
-const port=process.env.PORT|3001
-// our localhost port
-
-const app = express()
-
-// our server instance
-const server = http.createServer(app)
-
+const port = process.env.PORT | 3001
 
 app.use('/', express.static(path.join(__dirname, 'public')))
 
