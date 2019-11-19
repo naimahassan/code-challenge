@@ -26,13 +26,13 @@
     "node-fetch": "^2.6.0",
     "pg": "^7.12.1",
     "socket.io": "^2.3.0",
-    "nodemon": "^1.19.4"
-  },
-  "devDependencies": {
+    "nodemon": "^1.19.4",
     "@babel/cli": "^7.0.0-rc.1",
     "@babel/core": "^7.0.0-rc.1",
     "@babel/node": "^7.0.0-rc.1",
-    "@babel/preset-env": "^7.0.0-rc.1",
+    "@babel/preset-env": "^7.0.0-rc.1"
+  },
+  "devDependencies": {
     "eslint": "^6.5.1",
     "eslint-config-airbnb-base": "^14.0.0",
     "eslint-plugin-import": "^2.18.2"
